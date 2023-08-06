@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.MyBlankApp" parent="@style/Theme.Leanback" />
+</resources>
