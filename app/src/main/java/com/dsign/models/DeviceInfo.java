@@ -1,4 +1,4 @@
-package com.example.models;
+package com.dsign.models;
 
 public class DeviceInfo {
     public int _ID;

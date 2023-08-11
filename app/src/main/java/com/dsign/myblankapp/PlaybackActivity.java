@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import android.os.Bundle;
 

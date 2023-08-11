@@ -18,12 +18,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.MyBlankApp" >
+
+
         <activity
-            android:name=".ImageActivity"
+            android:name="com.dsign.myblankapp.ImageActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.dsign.myblankapp.MainActivity"
             android:banner="@drawable/app_icon_your_company"
             android:exported="true"
             android:icon="@drawable/app_icon_your_company"
@@ -37,14 +40,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailsActivity"
+            android:name="com.dsign.myblankapp.DetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaybackActivity"
+            android:name="com.dsign.myblankapp.PlaybackActivity"
             android:exported="false" />
         <activity
-            android:name=".BrowseErrorActivity"
+            android:name="com.dsign.myblankapp.BrowseErrorActivity"
             android:exported="false" />
+        <service android:name="com.dsign.services.DeviceService"></service>
+        <receiver android:name="com.dsign.receivers.AlarmReceiver"></receiver>
+        <receiver android:name="com.dsign.receivers.DownloadReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

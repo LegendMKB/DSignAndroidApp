@@ -1,8 +1,10 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
+
+import com.example.myblankapp.R;
 
 /*
  * Details activity class that loads LeanbackDetailsFragment class

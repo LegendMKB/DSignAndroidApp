@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import android.graphics.drawable.Drawable;
 
@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.myblankapp.R;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.

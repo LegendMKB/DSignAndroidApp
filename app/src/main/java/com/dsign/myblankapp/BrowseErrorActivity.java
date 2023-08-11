@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+
+import com.example.myblankapp.R;
 
 /*
  * BrowseErrorActivity shows how to use ErrorFragment

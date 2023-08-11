@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import java.util.ArrayList;
 import java.util.List;

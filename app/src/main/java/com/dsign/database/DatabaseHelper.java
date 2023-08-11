@@ -1,10 +1,8 @@
-package com.example.database;
+package com.dsign.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -19,7 +17,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-    db.execSQL(DsignContract.CREATE_TABLE_DEVICE);
+        db.execSQL(DsignContract.CREATE_TABLE_DEVICE);
+        db.execSQL(DsignContract.CREATE_TABLE_MEDIA_INFO);
         db.execSQL(DsignContract.INSERT_TABLE_DEVICE);
     }
 

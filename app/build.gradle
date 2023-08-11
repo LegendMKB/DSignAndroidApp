@@ -32,7 +32,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'com.amplifyframework:aws-storage-s3:2.8.7'
-    implementation 'com.amplifyframework:aws-auth-cognito:2.8.7'
-    implementation "androidx.tonyodev.fetch2:xfetch2:3.1.6"
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }

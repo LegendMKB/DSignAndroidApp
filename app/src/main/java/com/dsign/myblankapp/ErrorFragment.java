@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.core.content.ContextCompat;
 import androidx.leanback.app.ErrorSupportFragment;
+
+import com.example.myblankapp.R;
 
 /*
  * This class demonstrates how to extend ErrorSupportFragment.

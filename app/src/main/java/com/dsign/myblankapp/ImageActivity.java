@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
@@ -11,6 +11,8 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.myblankapp.R;
 
 import java.io.InputStream;
 

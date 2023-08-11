@@ -1,4 +1,4 @@
-package com.example.myblankapp;
+package com.dsign.myblankapp;
 
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter;
 
