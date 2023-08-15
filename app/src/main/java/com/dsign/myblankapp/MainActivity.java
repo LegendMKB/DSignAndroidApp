@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 
@@ -20,7 +21,8 @@ import com.example.myblankapp.R;
 /*
  * Main Activity class that loads {@link MainFragment}.
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity{
+//public class MainActivity extends FragmentActivity {
 
     int status = 0;
     TextView tview;
@@ -29,8 +31,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
 
-
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         //Database
        DBUtility dbutil = new DBUtility(this);
@@ -38,7 +39,7 @@ public class MainActivity extends FragmentActivity {
 
 
         //Start Background Service for Device API call
-       /* AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+ /*       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
@@ -49,13 +50,13 @@ public class MainActivity extends FragmentActivity {
 
 
         //Start Background Service for Download of media files
-        AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+      /*  AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent downloadAlarmIntent = new Intent(this, DownloadAlarmReceiver.class);
         PendingIntent downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, 0);
 
         long downloadIntervalMillis = 3 * 60 * 1000; // 3 minutes in milliseconds
 
-        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);
+        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);*/
         /////Background Service Download of media files END
 
 
@@ -83,11 +84,15 @@ public class MainActivity extends FragmentActivity {
                 CheckAPIStatus();
             }
         });
-        /*if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+       // if (savedInstanceState == null) {
+           /* getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_browse_fragment, new MainFragment())
-                    .commitNow();
-        }*/
+                    .commitNow();*/
+       // }
+
+       /* Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
+        startActivity(playMediaIntent);
+*/
     }
 
 

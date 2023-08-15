@@ -35,6 +35,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.dsign.database.DBUtility;
+import com.dsign.models.MediaInfo;
 import com.example.myblankapp.R;
 
 import java.util.Collections;
@@ -62,18 +64,21 @@ public class MainFragment extends BrowseSupportFragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        List<Movie> list = MovieList.setupMovies();
-       for(int i = 0 ; i < list.size(); i++)
-        {
-            Movie mSelectedMovie = list.get(i);
-            Intent intent = new Intent(getActivity(), PlaybackActivity.class);
-            intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
-            startActivity(intent);
 
-            Intent imgintent = new Intent(getActivity(), ImageActivity.class);
-            //intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
+        DBUtility dbUtility = new DBUtility(getContext());
+        List<MediaInfo> mediaInfos = dbUtility.getMediaInfoForPlay();
+      /* for(int i = 0 ; i < mediaInfos.size(); i++)
+        {*/
+            MediaInfo mediaInfo = mediaInfos.get(0);
+
+           /* Intent intent = new Intent(getActivity(), PlaybackActivity.class);
+            intent.putExtra(DetailsActivity.MOVIE, mediaInfo.getMediaLocalPath());
+            startActivity(intent);*/
+
+            Intent imgintent = new Intent(getActivity(), ImageOldActivity.class);
+            imgintent.putExtra("ImgItem", mediaInfo.getMediaLocalPath());
             startActivity(imgintent);
-        }
+       // }
        /* Intent intent = new Intent(getActivity(), ImageActivity.class);
         //intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
         startActivity(intent);*/

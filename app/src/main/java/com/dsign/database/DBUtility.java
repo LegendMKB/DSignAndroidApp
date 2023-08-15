@@ -63,6 +63,7 @@ private Context _context;
                         ContentValues values = new ContentValues();
                         values.put(DsignContract.MediaInfo.COLUMN_NAME_GROUP_ID, med.get(i).getgID());
                         values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID, med.get(i).getmID());
+                        values.put(DsignContract.MediaInfo.COLUMN_NAME_SCREEN_ID, med.get(i).getsID());
                         values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_URL, med.get(i).getMediaurl());
                         values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_FILENAME, med.get(i).getMediaFileName());
                         values.put(DsignContract.MediaInfo.COLUMN_NAME_DURATION, med.get(i).getDuration());
@@ -96,7 +97,7 @@ private Context _context;
         return true;
     }
 
-    public List<MediaInfo> getMediaInfoForPlay(MediaContent mcontent) {
+    public List<MediaInfo> getMediaInfoForPlay() {
         SQLiteDatabase db = null;
         List<MediaInfo> playList = new ArrayList<MediaInfo>();
         try {
@@ -109,8 +110,9 @@ private Context _context;
 
                 minfo.setgID(cursor.getInt(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_GROUP_ID)));
                 minfo.setmID(cursor.getInt(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID)));
+                minfo.setMediaLocalPath(cursor.getString(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_LOCAL_PATH)));
                 minfo.setDuration(cursor.getLong(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_DURATION)));
-                minfo.setMediaurl(cursor.getString(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_URL)));
+                minfo.setMediaFileName(cursor.getString(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_FILENAME)));
 
                 playList.add(minfo);
             }
@@ -137,13 +139,13 @@ private Context _context;
             DatabaseHelper dbHelper = new DatabaseHelper(_context);
             db = dbHelper.getReadableDatabase();
 
-            String selection = DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS+ "=? AND " + DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS + "=?" ;
+            String selection = DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS+ "=? OR " + DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS + "=?" ;
             String[] projection = {DownloadStatus.NOT_STARTED.toString(), DownloadStatus.FAILED.toString()};
 
             Cursor cursor = db.query (DsignContract.MediaInfo.TABLE_NAME, null, selection, projection, null, null, null, String.valueOf(1));
             while(cursor.moveToNext()) {
                 MediaInfo minfo = new MediaInfo();
-                minfo.setgID(cursor.getInt(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_SCREEN_ID)));
+                minfo.setsID(cursor.getInt(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_SCREEN_ID)));
                 minfo.setgID(cursor.getInt(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_GROUP_ID)));
                 minfo.setmID(cursor.getInt(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID)));
                 minfo.setDuration(cursor.getLong(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_DURATION)));
@@ -164,6 +166,70 @@ private Context _context;
         }
 
         return downloadList;
+    }
+
+
+    public boolean updateFileDownloadStatus(long downloadId, String downloadedFilePath, DownloadStatus status) {
+        SQLiteDatabase db = null;
+        try {
+            DatabaseHelper dbHelper = new DatabaseHelper(_context);
+
+            db = dbHelper.getReadableDatabase();
+
+            if(status == DownloadStatus.COMPLETED){
+                String whereClause = DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_MANAGER_ID + "=?" ;
+                String[] whereArgs = {String.valueOf(downloadId)};
+                ContentValues values = new ContentValues();
+                values.put(DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS, status.toString());
+                values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_LOCAL_PATH, downloadedFilePath);
+                db.update(DsignContract.MediaInfo.TABLE_NAME, values, whereClause, whereArgs);
+            }
+            else{
+                String whereClause = DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_MANAGER_ID + "=?" ;
+                String[] whereArgs = {String.valueOf(downloadId)};
+                ContentValues values = new ContentValues();
+
+                values.put(DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS, status.toString());
+                db.update(DsignContract.MediaInfo.TABLE_NAME, values, whereClause, whereArgs);
+            }
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+            return false;
+        }finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
+        return true;
+    }
+
+    public boolean updateFileDownloadInfo(MediaInfo mediaInfo, long downloadId, DownloadStatus status) {
+        SQLiteDatabase db = null;
+        try {
+            DatabaseHelper dbHelper = new DatabaseHelper(_context);
+
+            db = dbHelper.getReadableDatabase();
+
+            String whereClause = DsignContract.MediaInfo.COLUMN_NAME_SCREEN_ID + "=? AND " + DsignContract.MediaInfo.COLUMN_NAME_GROUP_ID + "=? AND " + DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID + "=?";
+            String[] whereArgs = {String.valueOf(mediaInfo.getsID()), String.valueOf(mediaInfo.getgID()), String.valueOf(mediaInfo.getmID())};
+            ContentValues values = new ContentValues();
+
+            values.put(DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_MANAGER_ID, String.valueOf(downloadId));
+            values.put(DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS, status.toString());
+            db.update(DsignContract.MediaInfo.TABLE_NAME, values, whereClause, whereArgs);
+
+
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+            return false;
+        }finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
+        return true;
     }
 
 }

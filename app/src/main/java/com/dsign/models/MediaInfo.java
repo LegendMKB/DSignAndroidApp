@@ -18,6 +18,9 @@ public class MediaInfo {
 
     @SerializedName("mediafilename")
     private String MediaFileName;
+
+    @SerializedName("medialocalpath")
+    private String MediaLocalPath;
     @SerializedName("playindex")
     private Long Playindex;
     @SerializedName("type")
@@ -83,5 +86,13 @@ public class MediaInfo {
 
     public void setMediaFileName(String mediaFileName) {
         MediaFileName = mediaFileName;
+    }
+
+    public String getMediaLocalPath() {
+        return MediaLocalPath;
+    }
+
+    public void setMediaLocalPath(String mediaLocalPath) {
+        MediaLocalPath = mediaLocalPath;
     }
 }

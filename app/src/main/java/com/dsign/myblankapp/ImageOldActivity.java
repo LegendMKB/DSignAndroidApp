@@ -1,6 +1,5 @@
 package com.dsign.myblankapp;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.graphics.Bitmap;
@@ -16,15 +15,24 @@ import com.example.myblankapp.R;
 
 import java.io.InputStream;
 
-public class ImageActivity extends FragmentActivity {
+public class ImageOldActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        new DownloadImageFromInternet((ImageView) findViewById(R.id.image_view)).execute("https://commondatastorage.googleapis.com/android-tv/Sample%20videos/April%20Fool's%202013/Introducing%20Google%20Fiber%20to%20the%20Pole/bg.jpg");
+        Bundle extras = getIntent().getExtras();
+        String imgPath = "";
+        if (extras != null) {
+            imgPath = extras.getString("ImgItem");
+            // Use the value as needed
+        }
         int FinishTime = 10;
         int countDownInterval = 1000;
+
+        ImageView imgview = (ImageView) findViewById(R.id.image_view);
+        Bitmap bitmap = BitmapFactory.decodeFile(imgPath);
+        imgview.setImageBitmap(bitmap);
         CountDownTimer counterTimer = new CountDownTimer(FinishTime * 1000, countDownInterval) {
             public void onFinish() {
                 //finish your activity here

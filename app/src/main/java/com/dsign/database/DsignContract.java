@@ -25,9 +25,12 @@ public class DsignContract {
         public static final String COLUMN_NAME_PLAY_INDEX = "playindex";
         public static final String COLUMN_NAME_MEDIA_URL = "mediaurl";
         public static final String COLUMN_NAME_MEDIA_FILENAME = "mediafilename";
+
+        public static final String COLUMN_NAME_MEDIA_LOCAL_PATH = "medialocalpath";
         public static final String COLUMN_NAME_TYPE = "type";
         public static final String COLUMN_NAME_DURATION = "duration";
         public static final String COLUMN_NAME_DOWNLOAD_STATUS = "downloadstatus";
+        public static final String COLUMN_NAME_DOWNLOAD_MANAGER_ID = "downloadid";
     }
 
 /**************Create Table Start*********************************/
@@ -40,8 +43,10 @@ public class DsignContract {
                     MediaInfo.COLUMN_NAME_PLAY_INDEX+ " INTEGER," +
                     MediaInfo.COLUMN_NAME_MEDIA_URL+ " TEXT," +
                     MediaInfo.COLUMN_NAME_MEDIA_FILENAME+ " TEXT," +
+                    MediaInfo.COLUMN_NAME_MEDIA_LOCAL_PATH+ " TEXT," +
                     MediaInfo.COLUMN_NAME_TYPE+ " TEXT," +
                     MediaInfo.COLUMN_NAME_DURATION+ " INTEGER," +
+                    MediaInfo.COLUMN_NAME_DOWNLOAD_MANAGER_ID+ " REAL," +
                     MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS+ " TEXT)";
 
     public static final String CREATE_TABLE_DEVICE =

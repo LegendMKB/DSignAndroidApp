@@ -7,18 +7,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.dsign.DownloadStatus;
+import com.dsign.database.DBUtility;
+import com.dsign.models.MediaInfo;
 import com.dsign.receivers.DownloadReceiver;
 
 import java.io.File;
 
 public class DownloadFile {
-    public void downloadFile(Context context, String remotefileUrl, String destFileName, String cusId, String title, String description){
-
+    public void downloadFile(Context context, MediaInfo mediaInfo, String destFileName, String title, String description){
         // Get the DownloadManager service
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
         // Create a request for the download
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(remotefileUrl));
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mediaInfo.getMediaurl()));
         request.setTitle(title);
         request.setDescription(description);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
@@ -27,33 +29,11 @@ public class DownloadFile {
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destFileName);
         //request.setDestinationInExternalFilesDir()
 
-        Intent intent = new Intent(context, DownloadReceiver.class);
-        intent.putExtra("MyID", cusId);
         // Enqueue the download and get a download ID
         long downloadId = downloadManager.enqueue(request);
+        DBUtility dbUtility = new DBUtility(context);
+        dbUtility.updateFileDownloadInfo(mediaInfo, downloadId, DownloadStatus.IN_PROGRESS);
 
-
-       /* BroadcastReceiver onComplete = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context ctxt, Intent intent) {
-                // Handle download completion
-                // Move the downloaded file from public external storage to internal storage
-
-                long receivedDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                if (receivedDownloadId == downloadId) {
-                    // Download completed, handle the downloaded file here
-                    File sourceFile = new File(ctxt.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "temp_filename");
-                    File targetFile = new File(ctxt.getFilesDir(), "downloaded_filename");
-
-                    if (sourceFile.renameTo(targetFile)) {
-                        // File moved successfully
-                    } else {
-                        // Error moving the file
-                    }
-                }
-
-            }
-        };*/
-        //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        //Update File Status
     }
 }

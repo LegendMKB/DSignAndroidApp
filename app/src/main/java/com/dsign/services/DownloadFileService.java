@@ -27,7 +27,7 @@ public class DownloadFileService extends Service {
         if(downloadMediaFileList.size() > 0){
             for(int i = 0; i < downloadMediaFileList.size(); i++){
                 DownloadFile downloadFile = new DownloadFile();
-                downloadFile.downloadFile(getApplicationContext(), downloadMediaFileList.get(i).getMediaurl(), downloadMediaFileList.get(i).getMediaFileName(), String.valueOf(downloadMediaFileList.get(i).getmID()),"Downloading", "Downloading");
+                downloadFile.downloadFile(getApplicationContext(), downloadMediaFileList.get(i), String.valueOf(downloadMediaFileList.get(i).getMediaFileName()),"Downloading", "Downloading");
             }
 
         }
