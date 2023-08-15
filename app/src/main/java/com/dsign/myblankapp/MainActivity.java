@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Device API call
- /*       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+       /* AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Download of media files
-      /*  AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent downloadAlarmIntent = new Intent(this, DownloadAlarmReceiver.class);
         PendingIntent downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, 0);
 
         long downloadIntervalMillis = 3 * 60 * 1000; // 3 minutes in milliseconds
 
-        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);*/
+        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);
         /////Background Service Download of media files END
 
 
@@ -90,9 +90,8 @@ public class MainActivity extends AppCompatActivity{
                     .commitNow();*/
        // }
 
-       /* Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
-        startActivity(playMediaIntent);
-*/
+/*        Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
+        startActivity(playMediaIntent);*/
     }
 
 

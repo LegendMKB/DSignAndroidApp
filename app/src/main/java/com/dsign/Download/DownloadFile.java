@@ -24,8 +24,9 @@ public class DownloadFile {
         request.setTitle(title);
         request.setDescription(description);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
+        File destinationFile = new File(context.getFilesDir(), destFileName);
         // Save the file in the "Downloads" directory
+        //request.setDestinationUri(Uri.fromFile(destinationFile));
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destFileName);
         //request.setDestinationInExternalFilesDir()
 

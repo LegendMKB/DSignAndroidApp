@@ -56,5 +56,8 @@ public class DownloadReceiver extends BroadcastReceiver {
         }
         cursor.close();
     }
+
+
+
 }
 
