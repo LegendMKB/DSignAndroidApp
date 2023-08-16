@@ -26,9 +26,10 @@ public class DownloadFile {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         File destinationFile = new File(context.getFilesDir(), destFileName);
         // Save the file in the "Downloads" directory
-        //request.setDestinationUri(Uri.fromFile(destinationFile));
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destFileName);
-        //request.setDestinationInExternalFilesDir()
+        Uri ff = Uri.fromFile(destinationFile);
+        request.setDestinationUri(Uri.fromFile(destinationFile));
+        //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destFileName);
+        request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_PICTURES, destFileName);
 
         // Enqueue the download and get a download ID
         long downloadId = downloadManager.enqueue(request);

@@ -1,13 +1,18 @@
 package com.dsign.myblankapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +34,9 @@ public class ImageFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_MEDIA_FILE = "media_file";
     private static final String ARG_MEDIA_DURATION = "media_duration";
+
+    private FragmentInteractionListener interactionListener;
+    private Handler handler;
 
     // TODO: Rename and change types of parameters
     private String mediaFile;
@@ -57,12 +65,24 @@ public class ImageFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentInteractionListener) {
+            interactionListener = (FragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement FragmentInteractionListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mediaFile = getArguments().getString(ARG_MEDIA_FILE);
             mediaDuration = getArguments().getString(ARG_MEDIA_DURATION);
         }
+
+        handler = new Handler();
     }
 
     @Override
@@ -74,11 +94,33 @@ public class ImageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_image, container, false);
         ImageView tview = view.findViewById(R.id.media_image_view);
-        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS); // + "/" + mediaFile;
-        String downloadPath = downloadDir.getAbsolutePath();
-        //Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mediaFile);
-        tview.setImageURI(Uri.parse(downloadPath + "/" + mediaFile));
-        //tview.setImageBitmap(bitmap);
+        tview.setImageURI(Uri.parse(mediaFile));
+        closeFragmentAfterDelay(Long.parseLong(mediaDuration) * 1000);
         return  view;
+    }
+
+    private void closeFragmentAfterDelay(long delayMillis) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Close the fragment
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(ImageFragment.this).commit();
+                closeFragment();
+            }
+        }, delayMillis);
+    }
+
+    public void closeFragment() {
+        // FragmentA cleanup logic here
+        interactionListener.onFragmentClosed(); // Signal MainActivity
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove any pending callbacks to prevent leaks
+        handler.removeCallbacksAndMessages(null);
     }
 }

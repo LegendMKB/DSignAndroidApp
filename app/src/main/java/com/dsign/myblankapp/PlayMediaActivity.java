@@ -2,11 +2,14 @@ package com.dsign.myblankapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.widget.Toast;
@@ -17,8 +20,11 @@ import com.example.myblankapp.R;
 
 import java.util.List;
 
-public class PlayMediaActivity extends AppCompatActivity {
+public class PlayMediaActivity extends AppCompatActivity implements FragmentInteractionListener{
 
+    private List<MediaInfo> mediaInfos;
+    private int mediaCount = 0;
+    private int playCount = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +33,8 @@ public class PlayMediaActivity extends AppCompatActivity {
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);*/
 
+        LoadPlayList ();
+        PlayMedia(savedInstanceState);
 
     }
 
@@ -38,20 +46,38 @@ public class PlayMediaActivity extends AppCompatActivity {
     }
 
     void LoadImageFragment(Bundle savedInstanceState, MediaInfo mediaInfo){
-        ImageFragment imgFragment = ImageFragment.newInstance(mediaInfo.getMediaFileName(), String.valueOf(mediaInfo.getDuration()));
-        if (savedInstanceState == null) {
+
+        ImageFragment imgFragment = ImageFragment.newInstance(mediaInfo.getMediaLocalPath(), String.valueOf(mediaInfo.getDuration()));
+        //if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .replace(R.id.dframe_container ,imgFragment, null)
                     .commit();
-        }
+        //}
 
+    }
+    void LoadPlayList ()
+    {
+        DBUtility dbUtility = new DBUtility(this);
+        mediaInfos = dbUtility.getMediaInfoForPlay();
+        mediaCount = mediaInfos.size();
     }
 
     void PlayMedia(Bundle savedInstanceState){
-        DBUtility dbUtility = new DBUtility(this);
-        List<MediaInfo> mediaInfos = dbUtility.getMediaInfoForPlay();
-        MediaInfo mediaInfo = mediaInfos.get(0);
+        MediaInfo mediaInfo = mediaInfos.get(playCount++);
         LoadImageFragment(savedInstanceState, mediaInfo);
+    }
+
+    @Override
+    public void onFragmentClosed() {
+        ContinuePlayMedia ();
+    }
+
+    void ContinuePlayMedia (){
+        if (playCount >= mediaCount) {
+            playCount = 0;
+            LoadPlayList ();
+        }
+        PlayMedia(null);
     }
 }

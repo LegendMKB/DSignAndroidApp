@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,10 +28,17 @@ public class MainActivity extends AppCompatActivity{
 
     int status = 0;
     TextView tview;
+    private PowerManager.WakeLock wakeLock;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
+        // Acquire a WakeLock to prevent the screen from sleeping
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::WakeLockTag");
+        wakeLock.acquire();
 
         setContentView(R.layout.activity_main);
 
@@ -39,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Device API call
-       /* AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+   /*     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
@@ -50,13 +59,13 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Download of media files
-        AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        /*AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent downloadAlarmIntent = new Intent(this, DownloadAlarmReceiver.class);
         PendingIntent downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, 0);
 
         long downloadIntervalMillis = 3 * 60 * 1000; // 3 minutes in milliseconds
 
-        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);
+        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);*/
         /////Background Service Download of media files END
 
 
@@ -90,11 +99,19 @@ public class MainActivity extends AppCompatActivity{
                     .commitNow();*/
        // }
 
-/*        Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
-        startActivity(playMediaIntent);*/
+        Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
+        startActivity(playMediaIntent);
+
+
     }
 
-
+    @Override
+    protected void onDestroy() {
+        if (wakeLock.isHeld()) {
+            wakeLock.release();
+        }
+        super.onDestroy();
+    }
 
     private void SetDeviceText (String msg){
         TextView tview = findViewById(R.id.textView);
