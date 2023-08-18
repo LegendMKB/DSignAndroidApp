@@ -27,6 +27,9 @@ public class Medium {
     @SerializedName("changestatus")
     private int Changestatus;
 
+    @SerializedName("isdelete")
+    private int IsDelete;
+
     public int getsID() {
         return sID;
     }
@@ -61,5 +64,13 @@ public class Medium {
 
     public String getMediaFileName() {
         return MediaFileName;
+    }
+
+    public int getIsDelete() {
+        return IsDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        IsDelete = isDelete;
     }
 }

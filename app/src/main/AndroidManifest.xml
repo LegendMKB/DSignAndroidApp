@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -47,6 +47,15 @@
 
         <receiver android:name="com.dsign.receivers.AlarmReceiver" />
         <receiver android:name="com.dsign.receivers.DownloadAlarmReceiver" />
+        <receiver
+            android:name="com.dsign.receivers.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
         <service android:name="com.dsign.services.DownloadFileService" />
 

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dsign.database.DBUtility;
@@ -28,6 +29,7 @@ public class PlayMediaActivity extends AppCompatActivity implements FragmentInte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_play_media);
     /*    ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,

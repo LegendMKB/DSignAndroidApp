@@ -1,16 +1,23 @@
 package com.dsign.myblankapp;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 
@@ -28,19 +35,34 @@ public class MainActivity extends AppCompatActivity{
 
     int status = 0;
     TextView tview;
+
+    private static final int PERMISSION_REQUEST_CODE = 123;
     private PowerManager.WakeLock wakeLock;
+    private MediaChecker mediaChecker;
+    private Handler handler = new Handler();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Acquire a WakeLock to prevent the screen from sleeping
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::WakeLockTag");
         wakeLock.acquire();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, PERMISSION_REQUEST_CODE);
+            }
+        }
+
+
+
+
         setContentView(R.layout.activity_main);
+
 
         //Database
        DBUtility dbutil = new DBUtility(this);
@@ -48,18 +70,18 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Device API call
-   /*     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         long intervalMillis = 3 * 60 * 1000; // 3 minutes in milliseconds
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalMillis, pendingIntent);*/
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervalMillis, pendingIntent);
         /////Background Service for Device API call END
 
 
         //Start Background Service for Download of media files
-        /*AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+       /* AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent downloadAlarmIntent = new Intent(this, DownloadAlarmReceiver.class);
         PendingIntent downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, 0);
 
@@ -71,19 +93,20 @@ public class MainActivity extends AppCompatActivity{
 
 
         ///Play Media Files Start
+     /*   Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
+        startActivity(playMediaIntent);*/
 
+        // Initialize your databaseChecker instance here.
+        mediaChecker = new MediaChecker(handler);
+
+        // Start the periodic checking.
+        handler.post(mediaChecker);
         ///Play Media Files End
 
         //if(deviceinfo == null)
        // {
         setContentView(R.layout.activity_not_registered);
         SetDeviceText ("Waiting");
-
-
-       /* Intent serviceIntent = new Intent(this,
-                DeviceService.class);
-        startService(serviceIntent);*/
-
 
        //}
 
@@ -93,17 +116,21 @@ public class MainActivity extends AppCompatActivity{
                 CheckAPIStatus();
             }
         });
-       // if (savedInstanceState == null) {
-           /* getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_browse_fragment, new MainFragment())
-                    .commitNow();*/
-       // }
-
-        Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
-        startActivity(playMediaIntent);
-
-
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can proceed with your logic
+            } else {
+                // Permission denied, handle accordingly
+            }
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -130,4 +157,32 @@ public class MainActivity extends AppCompatActivity{
             }
         }, delayInMillis);
     }
+
+    public class MediaChecker implements Runnable {
+        private final Handler handler;
+        private boolean stopChecking = false;
+
+        public MediaChecker(Handler handler) {
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            if (stopChecking) {
+                return;
+            }
+            DBUtility dbutil = new DBUtility(getApplicationContext());
+
+            if (dbutil.isMediaAvailableForPlay()) {
+                stopChecking = true;
+                handler.removeCallbacks(this); // Stop further execution of this Runnable.
+                Intent playMediaIntent = new Intent(getApplicationContext(), PlayMediaActivity.class);
+                startActivity(playMediaIntent);
+                // Proceed with your desired action here.
+            } else {
+                handler.postDelayed(this, 5000); // Repeat the check every 1000 milliseconds.
+            }
+        }
+    }
+
 }

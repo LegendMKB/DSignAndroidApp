@@ -73,14 +73,21 @@ private Context _context;
                         db.insert(DsignContract.MediaInfo.TABLE_NAME, null, values);
 
                     } else {
-                        ContentValues values = new ContentValues();
-                        values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_URL, med.get(i).getMediaurl());
-                        values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_FILENAME, med.get(i).getMediaFileName());
-                        values.put(DsignContract.MediaInfo.COLUMN_NAME_DURATION, med.get(i).getDuration());
-                        values.put(DsignContract.MediaInfo.COLUMN_NAME_PLAY_INDEX, med.get(i).getPlayindex());
-                        values.put(DsignContract.MediaInfo.COLUMN_NAME_TYPE, med.get(i).getType());
-                        values.put(DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS, DownloadStatus.NOT_STARTED.toString());
-                        db.update(DsignContract.MediaInfo.TABLE_NAME, values, DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID + "=?", new String[]{String.valueOf(med.get(i).getmID())});
+                        if(med.get(i).getIsDelete() == 1) {
+                            String whereClause = DsignContract.MediaInfo.COLUMN_NAME_SCREEN_ID+ "=? AND " + DsignContract.MediaInfo.COLUMN_NAME_GROUP_ID + "=? AND " + DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID + "=?";
+                            String[] whereArgs = {String.valueOf(med.get(i).getsID()),String.valueOf(med.get(i).getgID()),String.valueOf(med.get(i).getmID())};
+                            db.delete(DsignContract.MediaInfo.TABLE_NAME, whereClause, whereArgs );
+                        }
+                        else {
+                            ContentValues values = new ContentValues();
+                            values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_URL, med.get(i).getMediaurl());
+                            values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_FILENAME, med.get(i).getMediaFileName());
+                            values.put(DsignContract.MediaInfo.COLUMN_NAME_DURATION, med.get(i).getDuration());
+                            values.put(DsignContract.MediaInfo.COLUMN_NAME_PLAY_INDEX, med.get(i).getPlayindex());
+                            values.put(DsignContract.MediaInfo.COLUMN_NAME_TYPE, med.get(i).getType());
+                            values.put(DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS, DownloadStatus.NOT_STARTED.toString());
+                            db.update(DsignContract.MediaInfo.TABLE_NAME, values, DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID + "=?", new String[]{String.valueOf(med.get(i).getmID())});
+                        }
                     }
                     cursor.close();
                 }
@@ -129,6 +136,36 @@ private Context _context;
         }
 
         return playList;
+    }
+
+    public boolean isMediaAvailableForPlay() {
+        boolean isAvailable = false;
+        SQLiteDatabase db = null;
+        try {
+
+            DatabaseHelper dbHelper = new DatabaseHelper(_context);
+            db = dbHelper.getReadableDatabase();
+            Cursor cursor = db.query(DsignContract.MediaInfo.TABLE_NAME, null, DsignContract.MediaInfo.COLUMN_NAME_DOWNLOAD_STATUS+ "=?", new String[]{DownloadStatus.COMPLETED.toString()}, null, null, null);
+            if(cursor.getCount() > 0)
+            {
+                isAvailable = true;
+            }
+            else{
+                isAvailable = false;
+            }
+
+            cursor.close();
+
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+            isAvailable = false;
+        }finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
+        return isAvailable;
     }
 
     public List<MediaInfo> getDownloadMediaFileList() {
