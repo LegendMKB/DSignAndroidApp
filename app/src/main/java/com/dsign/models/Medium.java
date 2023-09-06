@@ -27,6 +27,9 @@ public class Medium {
     @SerializedName("changestatus")
     private int Changestatus;
 
+    @SerializedName("updatestatus")
+    private int Updatestatus;
+
     @SerializedName("isdelete")
     private int IsDelete;
 
@@ -72,5 +75,13 @@ public class Medium {
 
     public void setIsDelete(int isDelete) {
         IsDelete = isDelete;
+    }
+
+    public int getUpdatestatus() {
+        return Updatestatus;
+    }
+
+    public void setUpdatestatus(int updatestatus) {
+        Updatestatus = updatestatus;
     }
 }

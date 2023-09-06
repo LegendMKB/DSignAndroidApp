@@ -95,7 +95,8 @@ public class ImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
         ImageView tview = view.findViewById(R.id.media_image_view);
         tview.setImageURI(Uri.parse(mediaFile));
-        closeFragmentAfterDelay(Long.parseLong(mediaDuration) * 1000);
+       // closeFragmentAfterDelay(Long.parseLong(mediaDuration) * 1000);
+        closeFragmentAfterDelay(1 * 1000);
         return  view;
     }
 

@@ -78,7 +78,7 @@ private Context _context;
                             String[] whereArgs = {String.valueOf(med.get(i).getsID()),String.valueOf(med.get(i).getgID()),String.valueOf(med.get(i).getmID())};
                             db.delete(DsignContract.MediaInfo.TABLE_NAME, whereClause, whereArgs );
                         }
-                        else {
+                        else if(med.get(i).getUpdatestatus() == 1){
                             ContentValues values = new ContentValues();
                             values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_URL, med.get(i).getMediaurl());
                             values.put(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_FILENAME, med.get(i).getMediaFileName());
@@ -120,7 +120,7 @@ private Context _context;
                 minfo.setMediaLocalPath(cursor.getString(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_LOCAL_PATH)));
                 minfo.setDuration(cursor.getLong(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_DURATION)));
                 minfo.setMediaFileName(cursor.getString(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_MEDIA_FILENAME)));
-
+                minfo.setType(cursor.getString(cursor.getColumnIndexOrThrow(DsignContract.MediaInfo.COLUMN_NAME_TYPE)));
                 playList.add(minfo);
             }
 

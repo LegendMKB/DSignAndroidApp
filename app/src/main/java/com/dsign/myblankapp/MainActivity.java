@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        setContentView(R.layout.activity_main);
+       setContentView(R.layout.activity_main);
 
 
         //Database
@@ -72,7 +74,13 @@ public class MainActivity extends AppCompatActivity{
         //Start Background Service for Device API call
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        PendingIntent pendingIntent;
+        if(Build.VERSION.SDK_INT >= 31){
+            pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_IMMUTABLE);
+        }
+        else {
+            pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        }
 
         long intervalMillis = 3 * 60 * 1000; // 3 minutes in milliseconds
 
@@ -81,13 +89,20 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Download of media files
-       /* AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager downloadAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent downloadAlarmIntent = new Intent(this, DownloadAlarmReceiver.class);
-        PendingIntent downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, 0);
+        PendingIntent downloadPendingIntent;
+        if(Build.VERSION.SDK_INT >= 31){
+            downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, PendingIntent.FLAG_IMMUTABLE);
+        }
+        else{
+            downloadPendingIntent = PendingIntent.getBroadcast(this, 0, downloadAlarmIntent, 0);
+        }
+
 
         long downloadIntervalMillis = 3 * 60 * 1000; // 3 minutes in milliseconds
 
-        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);*/
+        downloadAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), downloadIntervalMillis, downloadPendingIntent);
         /////Background Service Download of media files END
 
 
@@ -100,13 +115,23 @@ public class MainActivity extends AppCompatActivity{
         mediaChecker = new MediaChecker(handler);
 
         // Start the periodic checking.
-        handler.post(mediaChecker);
+       handler.post(mediaChecker);
         ///Play Media Files End
 
         //if(deviceinfo == null)
        // {
         setContentView(R.layout.activity_not_registered);
-        SetDeviceText ("Waiting");
+        SetDeviceText ("Please wait while downloading the media Files");
+
+        Button myButton = findViewById(R.id.buttonStartPlay);
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Code to execute when the button is clicked
+                // For example, you can show a toast message
+                StartPlay();
+            }
+        });
 
        //}
 
@@ -158,6 +183,11 @@ public class MainActivity extends AppCompatActivity{
         }, delayInMillis);
     }
 
+    private void StartPlay(){
+        Intent playMediaIntent = new Intent(getApplicationContext(), PlayMediaActivity.class);
+        startActivity(playMediaIntent);
+    }
+
     public class MediaChecker implements Runnable {
         private final Handler handler;
         private boolean stopChecking = false;
@@ -176,8 +206,9 @@ public class MainActivity extends AppCompatActivity{
             if (dbutil.isMediaAvailableForPlay()) {
                 stopChecking = true;
                 handler.removeCallbacks(this); // Stop further execution of this Runnable.
-                Intent playMediaIntent = new Intent(getApplicationContext(), PlayMediaActivity.class);
-                startActivity(playMediaIntent);
+               /* Intent playMediaIntent = new Intent(getApplicationContext(), PlayMediaActivity.class);
+                startActivity(playMediaIntent);*/
+                StartPlay();
                 // Proceed with your desired action here.
             } else {
                 handler.postDelayed(this, 5000); // Repeat the check every 1000 milliseconds.

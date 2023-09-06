@@ -58,6 +58,18 @@ public class PlayMediaActivity extends AppCompatActivity implements FragmentInte
         //}
 
     }
+
+    void LoadVideoFragment(Bundle savedInstanceState, MediaInfo mediaInfo){
+
+        VideoFragment videoFragment = VideoFragment.newInstance(mediaInfo.getMediaLocalPath());
+        //if (savedInstanceState == null) {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.dframe_container ,new PlaybackVideoFragment(), null)
+                .commit();
+        //}
+
+    }
     void LoadPlayList ()
     {
         DBUtility dbUtility = new DBUtility(this);
@@ -67,7 +79,15 @@ public class PlayMediaActivity extends AppCompatActivity implements FragmentInte
 
     void PlayMedia(Bundle savedInstanceState){
         MediaInfo mediaInfo = mediaInfos.get(playCount++);
-        LoadImageFragment(savedInstanceState, mediaInfo);
+        if(mediaInfo.getType().equals("image")){
+            LoadImageFragment(savedInstanceState, mediaInfo);
+        }
+        else{
+            if(mediaInfo.getMediaFileName().equals("video1.mp4"))
+                mediaInfo.setMediaFileName("video2.mp4");
+            LoadVideoFragment(savedInstanceState, mediaInfo);
+        }
+
     }
 
     @Override
