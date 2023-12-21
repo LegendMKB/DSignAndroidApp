@@ -36,11 +36,12 @@ public class DownloadReceiver extends BroadcastReceiver {
             if (status == DownloadManager.STATUS_SUCCESSFUL) {
                 int fileUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
                 String downloadedUriString = cursor.getString(fileUriIndex);
-                //Uri downloadedUri = Uri.parse(downloadedUriString);
+                Uri contentUri = Uri.parse(downloadedUriString);
 
                 // Convert the Uri to a file path
                 //String filePath = downloadedUri.getPath();
-                dbUtility.updateFileDownloadStatus(downloadId, downloadedUriString, DownloadStatus.COMPLETED);
+                dbUtility.updateFileDownloadStatus(downloadId, contentUri.toString(), DownloadStatus.COMPLETED);
+               ///// dbUtility.updateFileDownloadStatus(downloadId, downloadedUriString, DownloadStatus.COMPLETED);
                 // Download completed successfully
             } else if (status == DownloadManager.STATUS_FAILED) {
                 // Download failed

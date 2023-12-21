@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Acquire a WakeLock to prevent the screen from sleeping
-        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+      /*  PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::WakeLockTag");
-        wakeLock.acquire();
+        wakeLock.acquire();*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED)) {
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         //Start Background Service for Device API call
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent;
         if(Build.VERSION.SDK_INT >= 31){
@@ -108,8 +108,6 @@ public class MainActivity extends AppCompatActivity{
 
 
         ///Play Media Files Start
-     /*   Intent playMediaIntent = new Intent(this, PlayMediaActivity.class);
-        startActivity(playMediaIntent);*/
 
         // Initialize your databaseChecker instance here.
         mediaChecker = new MediaChecker(handler);
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_not_registered);
         SetDeviceText ("Please wait while downloading the media Files");
 
-        Button myButton = findViewById(R.id.buttonStartPlay);
+        /*Button myButton = findViewById(R.id.buttonStartPlay);
         myButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +129,7 @@ public class MainActivity extends AppCompatActivity{
                 // For example, you can show a toast message
                 StartPlay();
             }
-        });
+        });*/
 
        //}
 

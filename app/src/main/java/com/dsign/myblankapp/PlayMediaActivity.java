@@ -61,11 +61,13 @@ public class PlayMediaActivity extends AppCompatActivity implements FragmentInte
 
     void LoadVideoFragment(Bundle savedInstanceState, MediaInfo mediaInfo){
 
-        VideoFragment videoFragment = VideoFragment.newInstance(mediaInfo.getMediaLocalPath());
+        //VideoFragment videoFragment = VideoFragment.newInstance(mediaInfo.getMediaLocalPath());
+//        WebViewFragment videoFragment = WebViewFragment.newInstance(mediaInfo.getMediaLocalPath());
+        ExoPlayerFragment videoFragment = ExoPlayerFragment.newInstance(mediaInfo.getMediaLocalPath());
         //if (savedInstanceState == null) {
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.dframe_container ,new PlaybackVideoFragment(), null)
+                .replace(R.id.dframe_container ,videoFragment, null)
                 .commit();
         //}
 
@@ -83,8 +85,8 @@ public class PlayMediaActivity extends AppCompatActivity implements FragmentInte
             LoadImageFragment(savedInstanceState, mediaInfo);
         }
         else{
-            if(mediaInfo.getMediaFileName().equals("video1.mp4"))
-                mediaInfo.setMediaFileName("video2.mp4");
+            /*if(mediaInfo.getMediaFileName().equals("video1.mp4"))
+                mediaInfo.setMediaFileName("video2.mp4");*/
             LoadVideoFragment(savedInstanceState, mediaInfo);
         }
 

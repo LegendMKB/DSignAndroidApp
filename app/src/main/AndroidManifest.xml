@@ -23,10 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBlankApp"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name="com.dsign.myblankapp.PlayMediaActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name="com.dsign.myblankapp.MainActivity"
             android:banner="@drawable/app_icon_your_company"
@@ -53,6 +54,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

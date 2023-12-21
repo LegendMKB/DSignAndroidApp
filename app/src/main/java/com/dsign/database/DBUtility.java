@@ -59,6 +59,7 @@ private Context _context;
             for (int i = 0; i < med.size(); i ++) {
                 if(med.get(i).getChangestatus() == 1) {
                     Cursor cursor = db.query(DsignContract.MediaInfo.TABLE_NAME, null, DsignContract.MediaInfo.COLUMN_NAME_MEDIA_ID + "=?", new String[]{String.valueOf(med.get(i).getmID())}, null, null, null);
+                    int cc = cursor.getCount();
                     if (cursor.getCount() < 1) {
                         ContentValues values = new ContentValues();
                         values.put(DsignContract.MediaInfo.COLUMN_NAME_GROUP_ID, med.get(i).getgID());
